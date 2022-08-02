@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Base Model module"""
+from copy import copy
 import uuid
 from datetime import datetime
 
@@ -49,7 +50,7 @@ class BaseModel:
         """Returns a dictionary containing all keys/values
         of __dict__ of the instance."""
 
-        _d = self.__dict__
+        _d = copy(self.__dict__)
         _d['__class__'] = self.__class__.__name__
         _d['created_at'] = _d['created_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')
         _d['updated_at'] = _d['updated_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')

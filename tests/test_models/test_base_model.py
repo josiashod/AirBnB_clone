@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Modue for test BaseModel class"""
+from datetime import datetime
 import unittest
 from models.base_model import BaseModel
 
@@ -15,7 +16,7 @@ class TestBaseModelMethods(unittest.TestCase):
     def test_id(self):
         """Test if each new instance has different id"""
 
-        self.assertNotEqual(self.base_one, self.base_two)
+        self.assertNotEqual(self.base_one.id, self.base_two.id)
 
     def test_str(self):
         """Test the str representation of the object"""
@@ -49,4 +50,48 @@ class TestBaseModelMethods(unittest.TestCase):
             'age': base_one.age,
         }
 
-        self.assertEqual(base_one.to_dict(), expected_dict)
+        self.assertDictEqual(base_one.to_dict(), expected_dict)
+
+    def test_init_kwargs(self):
+        """Test create of base model with dict parameters"""
+
+        base_one = BaseModel(**{
+            'id': 'test-b6a6e15c',
+            '__class__': 'BaseModel',
+            'name': 'Josias hod',
+            'school': 'ALX'
+        })
+
+        base_two = BaseModel(**{
+            'id': 'test-b6a6e189c',
+            '__class__': 'BaseModel',
+            'created_at': '2017-09-28T21:05:54.119572',
+            'name': 'ALX'
+        })
+
+        base_three = BaseModel(**{
+            '__class__': 'BaseModel',
+            'created_at': '2017-09-28T21:05:54.119572',
+            'updated_at': '2018-09-28T21:05:54.119572',
+        })
+
+        self.assertEqual(base_one.id, 'test-b6a6e15c')
+        self.assertEqual(base_one.name, 'Josias hod')
+        self.assertEqual(base_one.school, 'ALX')
+
+        self.assertEqual(base_two.id, 'test-b6a6e189c')
+        self.assertIsInstance(base_two.created_at, datetime)
+        self.assertEqual(base_two.name, 'ALX')
+
+        self.assertIsInstance(base_three.created_at, datetime)
+        self.assertIsInstance(base_three.updated_at, datetime)
+
+    def test_init_kwargs_2(self):
+        """Test create of base model with dict parameters"""
+
+        base = BaseModel(**self.base_one.to_dict())
+
+        self.assertEqual(base.id, self.base_one.id)
+        self.assertEqual(base.created_at, self.base_one.created_at)
+        self.assertEqual(base.updated_at, self.base_one.updated_at)
+        self.assertDictEqual(base.to_dict(), self.base_one.to_dict())
