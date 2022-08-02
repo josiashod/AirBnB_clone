@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 """Base Model module"""
-from copy import copy
 import uuid
+from copy import copy
 from datetime import datetime
+
+import models
 
 
 class BaseModel:
@@ -28,6 +30,10 @@ class BaseModel:
             we create an instance with id and create_at.
         """
 
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = self.created_at
+
         if kwargs is not None and len(kwargs.keys()) > 0:
             for key, value in kwargs.items():
                 if key != "__class__":
@@ -36,15 +42,15 @@ class BaseModel:
                     else:
                         setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.created_at
+            # put the new instance in storage objects
+            models.storage.new(self)
 
     def save(self):
         """Updates the public instance attribute updated_at with
-        the current datetime."""
+        the current datetime and put it in the storage."""
 
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """Returns a dictionary containing all keys/values
