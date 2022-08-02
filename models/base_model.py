@@ -14,13 +14,30 @@ class BaseModel:
         updated_at (datetime): the date on which the instance was updated
     """
 
-    def __init__(self):
-        """Initialize the class."""
+    def __init__(self, *args, **kwargs):
+        """Initialize the class.
 
-        now = datetime.now()
-        self.id = str(uuid.uuid4())
-        self.created_at = now
-        self.updated_at = now
+        Parameters:
+            args (list): not used.
+            kwargs (dict): used to assign attribute to the object
+
+        Description:
+            The init function used the kwargs dictionary to create an instance
+            with the given key/value in the dictionary. Otherwise
+            we create an instance with id and create_at.
+        """
+
+        if kwargs is not None and len(kwargs.keys()) > 0:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    if key == 'created_at' or key == 'updated_at':
+                        setattr(self, key, datetime.fromisoformat(value))
+                    else:
+                        setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
     def save(self):
         """Updates the public instance attribute updated_at with
