@@ -3,6 +3,7 @@
 import uuid
 from datetime import datetime
 
+
 class BaseModel:
     """This class will be the "base model" of all other model of the project
     and defines all common attributes/methods for other classes.
@@ -20,22 +21,24 @@ class BaseModel:
         self.id = str(uuid.uuid4())
         self.created_at = now
         self.updated_at = now
-    
+
     def save(self):
-        """Updates the public instance attribute updated_at with the current datetime"""
+        """Updates the public instance attribute updated_at with
+        the current datetime."""
 
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        """Returns a dictionary containing all keys/values of __dict__ of the instance"""
+        """Returns a dictionary containing all keys/values
+        of __dict__ of the instance."""
 
-        _dict = self.__dict__
-        _dict['__class__'] = self.__class__.__name__
-        _dict['created_at'] = _dict['created_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')
-        _dict['updated_at'] = _dict['updated_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')
+        _d = self.__dict__
+        _d['__class__'] = self.__class__.__name__
+        _d['created_at'] = _d['created_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')
+        _d['updated_at'] = _d['updated_at'].strftime('%Y-%m-%dT%H:%M:%S.%f')
 
-        return (_dict)
-    
+        return (_d)
+
     def __str__(self):
         """Returns the string representation of the object"""
 
