@@ -2,10 +2,16 @@
 """The console module of AIRBNB project"""
 import cmd
 import json
+from shlex import split
 
 from models import storage
+from models.amenity import Amenity
 from models.base_model import BaseModel
+from models.city import City
 from models.engine.file_storage import FileStorage
+from models.place import Place
+from models.review import Review
+from models.state import State
 from models.user import User
 
 
@@ -21,7 +27,12 @@ class HBNBCommand(cmd.Cmd):
     file = None
     __classes = [
         'BaseModel',
-        'User'
+        'User',
+        'Place',
+        'State',
+        'City',
+        'Amenity',
+        'Review'
     ]
 
     # ----- basic hbnb commands -----
@@ -156,8 +167,7 @@ def parse(arg):
     Method written to take and parse input before use
     """
 
-    args = arg.split(' ')
-    args = [arg for arg in args if len(arg) > 0]
+    args = split(arg)
     return args
 
 
