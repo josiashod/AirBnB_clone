@@ -42,7 +42,7 @@ class HBNBCommand(cmd.Cmd):
 
         a = line.split('.')
         if a[0] in self.__classes and len(a) == 2:
-            _a = re.match(r"(?P<function>\w+)\((?P<params>(\".*\"?)?)\)", a[1])
+            _a = re.match(r"(?P<function>\w+)\((?P<params>(\".*\"?,?)?)\)", a[1])
             try:
                 func = _a.group('function')
                 params = _a.group('params')
@@ -214,6 +214,7 @@ def parse(arg):
     """
 
     args = shlex.split(arg)
+    args = [arg.strip(',') for arg in args]
     return args
 
 
