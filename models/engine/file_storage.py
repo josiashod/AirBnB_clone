@@ -22,7 +22,7 @@ class FileStorage:
             the key will be BaseModel.12121212)
     """
 
-    __file_path = "storage.json"
+    __file_path = "file.json"
     __objects = {}
 
     def __init__(self) -> None:
