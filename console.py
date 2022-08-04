@@ -42,9 +42,9 @@ class HBNBCommand(cmd.Cmd):
 
         a = line.split('.')
         if a[0] in self.__classes and len(a) == 2:
-            _a = re.match(r"(?P<function>\w+)\((?P<params>(\".*\"?,?)?)\)", a[1])
+            _a = re.match(r"(?P<func>\w+)\((?P<params>(\".*\"?,?)?)\)", a[1])
             try:
-                func = _a.group('function')
+                func = _a.group('func')
                 params = _a.group('params')
                 eval('self.do_' + func)(f"{a[0]} {params}")
             except Exception:
@@ -163,8 +163,7 @@ class HBNBCommand(cmd.Cmd):
         Updates an instance based on the class name and id by adding or
         updating attribute (save the change into the JSON file)
 
-        Usage: update update <class name> <id> <attribute name>\
-"<attribute value>"
+        Usage: update <class name> <id> <attribute name> "<attribute value>"
         """
 
         args = parse(arg)
@@ -183,7 +182,13 @@ class HBNBCommand(cmd.Cmd):
                 if len(args) == 2:
                     print("** attribute name missing **")
                 elif len(args) == 3:
-                    print("** value missing **")
+                    attr_dict = eval(args[2])
+                    if type(attr_dict) != dict:
+                        print("** value missing **")
+                    else:
+                        for key_attr in attr_dict.keys():
+                            setattr(objects[key], key_attr, attr_dict[key_attr])
+                        objects[key].save()
                 else:
                     setattr(objects[key], args[2], args[3])
                     objects[key].save()
@@ -212,9 +217,13 @@ def parse(arg):
     """
     Method written to take and parse input before use
     """
-
-    args = shlex.split(arg)
-    args = [arg.strip(',') for arg in args]
+    brackets_arg = re.search(r'\{.*\}', arg)
+    if brackets_arg:
+        args = shlex.split(arg)
+        args = [args[0], args[1].strip(','), brackets_arg.group(0)]
+    else:
+        args = shlex.split(arg)
+        args = [arg.strip(',') for arg in args]
     return args
 
 
