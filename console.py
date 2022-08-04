@@ -2,7 +2,8 @@
 """The console module of AIRBNB project"""
 import cmd
 import json
-from shlex import split
+import re
+import shlex
 
 from models import storage
 from models.amenity import Amenity
@@ -36,6 +37,21 @@ class HBNBCommand(cmd.Cmd):
     ]
 
     # ----- basic hbnb commands -----
+    def default(self, line: str):
+        """HBnB default command to handle model method"""
+
+        a = line.split('.')
+        if a[0] in self.__classes and len(a) == 2:
+            _a = re.match(r"(?P<function>\w+)\((?P<params>(\".*\"?)?)\)", a[1])
+            try:
+                func = _a.group('function')
+                params = _a.group('params')
+                eval('self.do_' + func)(f"{a[0]} {params}")
+            except Exception:
+                return super().default(line)
+        else:
+            return super().default(line)
+
     def do_EOF(self, arg):
         """EOF signal to exit the program
         """
@@ -49,9 +65,11 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, arg):
-        """Creates a new instance of given model, saves it (to the JSON file)
-and prints the id\n
-Usage: create MyModel
+        """
+        Creates a new instance of given model, saves it (to the JSON file)
+        and prints the id
+
+        Usage: create <class name>
         """
 
         args = parse(arg)
@@ -65,9 +83,11 @@ Usage: create MyModel
             new_obj.save()
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class
-name and id.\n
-Usage: show BaseModel 1234-1234-1234
+        """
+        Prints the string representation of an instance based on the class
+        name and id.
+
+        Usage: show <class name> <id>
         """
 
         args = parse(arg)
@@ -86,9 +106,11 @@ Usage: show BaseModel 1234-1234-1234
                 print(objects[key])
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id
-(save the change into the JSON file)\n
-Usage: destroy BaseModel 1234-1234-1234
+        """
+        Deletes an instance based on the class name and id
+        (save the change into the JSON file)
+
+        Usage: destroy <class name> <id>
         """
 
         args = parse(arg)
@@ -113,9 +135,11 @@ Usage: destroy BaseModel 1234-1234-1234
                 storage.reload()
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based
-or not on the class name\n
-Usage: all BaseModel or all.
+        """
+        Prints all string representation of all instances based
+        or not on the class name
+
+        Usage: all <class name> or all.
         """
 
         args = parse(arg)
@@ -135,10 +159,13 @@ Usage: all BaseModel or all.
             print(objs)
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id by adding or
-updating attribute (save the change into the JSON file)\n
-Usage: update update <class name> <id> <attribute name> "<attribute value>"
-"""
+        """
+        Updates an instance based on the class name and id by adding or
+        updating attribute (save the change into the JSON file)
+
+        Usage: update update <class name> <id> <attribute name>\
+"<attribute value>"
+        """
 
         args = parse(arg)
         if len(args) == 0:
@@ -161,13 +188,32 @@ Usage: update update <class name> <id> <attribute name> "<attribute value>"
                     setattr(objects[key], args[2], args[3])
                     objects[key].save()
 
+    def do_count(self, arg):
+        """
+        Retrieves the number of instances of a class
+
+        Usage: count <class name>
+        """
+
+        args = parse(arg)
+        if len(args) == 0:
+            print("** class name missing **")
+        elif args[0] not in self.__classes:
+            print(" ** class doesn't exist **")
+        else:
+            objs = storage.all()
+            filter_objs = [
+                str(objs[key]) for key in objs.keys() if args[0] in key
+            ]
+            print(len(filter_objs))
+
 
 def parse(arg):
     """
     Method written to take and parse input before use
     """
 
-    args = split(arg)
+    args = shlex.split(arg)
     return args
 
 
