@@ -31,16 +31,3 @@ class Place(base_model.BaseModel):
     latitude = 0.0
     longitude = 0.0
     amenity_ids = []
-
-    def __init__(self, *args, **kwargs):
-        """Initialize the class.
-
-        Parameters:
-            args (list): not used.
-            kwargs (dict): used to assign attribute to the object
-        """
-
-        if kwargs is not None and len(kwargs.keys()) > 0:
-            super().__init__(**kwargs)
-        else:
-            super().__init__()
