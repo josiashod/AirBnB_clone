@@ -12,6 +12,8 @@ class Amenity(base_model.BaseModel):
         name (string): the name of the amenity
     """
 
+    name = ""
+
     def __init__(self, *args, **kwargs):
         """Initialize the class.
 
@@ -19,8 +21,6 @@ class Amenity(base_model.BaseModel):
             args (list): not used.
             kwargs (dict): used to assign attribute to the object
         """
-
-        self.name = ""
 
         if kwargs is not None and len(kwargs.keys()) > 0:
             super().__init__(**kwargs)
