@@ -19,16 +19,3 @@ class User(base_model.BaseModel):
     password = ""
     first_name = ""
     last_name = ""
-
-    def __init__(self, *args, **kwargs):
-        """Initialize the class.
-
-        Parameters:
-            args (list): not used.
-            kwargs (dict): used to assign attribute to the object
-        """
-
-        if kwargs is not None and len(kwargs.keys()) > 0:
-            super().__init__(**kwargs)
-        else:
-            super().__init__()
