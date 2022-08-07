@@ -187,8 +187,8 @@ class HBNBCommand(cmd.Cmd):
             try:
                 _dict = eval(args[2])
                 if type(_dict) == dict:
-                    for key_at in _dict.keys():
-                        setattr(objects[f"{args[0]}.{args[1]}"], key_at, _dict[key_at])
+                    for k in _dict.keys():
+                        setattr(objects[f"{args[0]}.{args[1]}"], k, _dict[k])
                     objects[f"{args[0]}.{args[1]}"].save()
             except NameError:
                 print("** value missing **")
