@@ -23,6 +23,11 @@ class User(base_model.BaseModel):
             kwargs (dict): used to assign attribute to the object
         """
 
+        self.email = ""
+        self.password = ""
+        self.first_name = ""
+        self.last_name = ""
+
         if kwargs is not None and len(kwargs.keys()) > 0:
             super().__init__(**kwargs)
         else:
