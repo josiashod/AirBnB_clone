@@ -186,8 +186,8 @@ class HBNBCommand(cmd.Cmd):
                     if type(attr_dict) != dict:
                         print("** value missing **")
                     else:
-                        for key_attr in attr_dict.keys():
-                            setattr(objects[key], key_attr, attr_dict[key_attr])
+                        for key_at in attr_dict.keys():
+                            setattr(objects[key], key_at, attr_dict[key_at])
                         objects[key].save()
                 else:
                     setattr(objects[key], args[2], args[3])
