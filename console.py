@@ -16,6 +16,20 @@ from models.state import State
 from models.user import User
 
 
+def parse(arg):
+    """
+    Method written to take and parse input before use
+    """
+    brackets_arg = re.search(r'\{.*\}', arg)
+    if brackets_arg:
+        args = shlex.split(arg)
+        args = [args[0], args[1].strip(','), brackets_arg.group(0)]
+    else:
+        args = shlex.split(arg)
+        args = [arg.strip(',') for arg in args]
+    return args
+
+
 class HBNBCommand(cmd.Cmd):
     """HBnB Console.
     See https://docs.python.org/3/library/cmd.html\
@@ -25,7 +39,6 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = '(hbnb) '
-    file = None
     __classes = [
         'BaseModel',
         'User',
@@ -36,24 +49,24 @@ class HBNBCommand(cmd.Cmd):
         'Review'
     ]
 
-    # ----- basic hbnb commands -----
     def default(self, line: str):
         """HBnB default command to handle model method"""
 
         a = line.split('.')
-        if a[0] in self.__classes and len(a) == 2:
+        if a[0] in HBNBCommand.__classes and len(a) == 2:
             _a = re.match(r"(?P<func>\w+)\((?P<params>(\".*\"?,?)?)\)", a[1])
             try:
                 func = _a.group('func')
                 params = _a.group('params')
-                eval('self.do_' + func)(f"{a[0]} {params}")
+                eval('HBNBCommand.do_' + func)(f"{a[0]} {params}")
             except Exception:
                 return super().default(line)
         else:
             return super().default(line)
 
     def emptyline(self):
-        return super().emptyline()
+        """Ignore empty lines + ENTER."""
+        pass
 
     def do_EOF(self, arg):
         """EOF signal to exit the program
@@ -63,7 +76,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_quit(self, arg):
-        """Quit command to exit the program
+        """Quitjosiashodcommand to exit the program
         """
         return True
 
@@ -78,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in self.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
         else:
             new_obj = eval(args[0])()
@@ -96,7 +109,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in self.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
         elif len(args) == 1:
             print(" ** instance id missing **")
@@ -119,7 +132,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in self.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
         elif len(args) == 1:
             print(" ** instance id missing **")
@@ -148,7 +161,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         objs = storage.all()
         if len(args) == 1:
-            if args[0] not in self.__classes:
+            if args[0] not in HBNBCommand.__classes:
                 print(" ** class doesn't exist **")
             else:
                 filter_objs = [
@@ -172,7 +185,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in self.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
         elif len(args) == 1:
             print(" ** instance id missing **")
@@ -206,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in self.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
         else:
             objs = storage.all()
@@ -214,20 +227,6 @@ class HBNBCommand(cmd.Cmd):
                 str(objs[key]) for key in objs.keys() if args[0] in key
             ]
             print(len(filter_objs))
-
-
-def parse(arg):
-    """
-    Method written to take and parse input before use
-    """
-    brackets_arg = re.search(r'\{.*\}', arg)
-    if brackets_arg:
-        args = shlex.split(arg)
-        args = [args[0], args[1].strip(','), brackets_arg.group(0)]
-    else:
-        args = shlex.split(arg)
-        args = [arg.strip(',') for arg in args]
-    return args
 
 
 if __name__ == '__main__':
