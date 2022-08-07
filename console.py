@@ -57,7 +57,7 @@ class HBNBCommand(cmd.Cmd):
             try:
                 func = _a.group('func')
                 params = _a.group('params')
-                eval('HBNBCommand.do_' + func)(f"{a[0]} {params}")
+                eval('self.do_' + func)(f"{a[0]} {params}")
             except Exception:
                 return super().default(line)
         else:
@@ -75,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_quit(self, arg):
-        """Quitjosiashodcommand to exit the program
+        """Quit command to exit the program
         """
         return True
 
@@ -106,19 +106,17 @@ class HBNBCommand(cmd.Cmd):
         """
 
         args = parse(arg)
+        objects = storage.all()
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(args) == 1:
             print("** instance id missing **")
+        elif f"{args[0]}.{args[1]}" not in objects:
+            print("** no instance found **")
         else:
-            objects = storage.all()
-            key = f"{args[0]}.{args[1]}"
-            if key not in objects.keys():
-                print("** no instance found **")
-            else:
-                print(objects[key])
+            print(objects[f"{args[0]}.{args[1]}"])
 
     def do_destroy(self, arg):
         """
@@ -155,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 1 and args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            if len(args) == 1 and args[0] not in HBNBCommand.__classes:
+            if len(args) == 1 and args[0] in HBNBCommand.__classes:
                 objs = [
                     str(objs[key]) for key in objs.keys() if args[0] in key
                 ]
@@ -174,31 +172,29 @@ class HBNBCommand(cmd.Cmd):
         """
 
         args = parse(arg)
+        objects = storage.all()
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(args) == 1:
             print("** instance id missing **")
+        elif f"{args[0]}.{args[1]}" not in objects:
+            print("** no instance found **")
+        elif len(args) == 2:
+            print("** attribute name missing **")
+        elif len(args) == 3:
+            try:
+                _dict = eval(args[2])
+                if type(_dict) == dict:
+                    for key_at in _dict.keys():
+                        setattr(objects[f"{args[0]}.{args[1]}"], key_at, _dict[key_at])
+                    objects[f"{args[0]}.{args[1]}"].save()
+            except NameError:
+                print("** value missing **")
         else:
-            objects = storage.all()
-            key = f"{args[0]}.{args[1]}"
-            if key not in objects.keys():
-                print("** no instance found **")
-            else:
-                if len(args) == 2:
-                    print("** attribute name missing **")
-                elif len(args) == 3:
-                    attr_dict = eval(args[2])
-                    if type(attr_dict) != dict:
-                        print("** value missing **")
-                    else:
-                        for key_at in attr_dict.keys():
-                            setattr(objects[key], key_at, attr_dict[key_at])
-                        objects[key].save()
-                else:
-                    setattr(objects[key], args[2], args[3])
-                    objects[key].save()
+            setattr(objects[f"{args[0]}.{args[1]}"], args[2], args[3])
+            objects[f"{args[0]}.{args[1]}"].save()
 
     def do_count(self, arg):
         """
@@ -214,10 +210,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             objs = storage.all()
-            filter_objs = [
+            count = len([
                 str(objs[key]) for key in objs.keys() if args[0] in key
-            ]
-            print(len(filter_objs))
+            ])
+            print(count)
 
 
 if __name__ == '__main__':
