@@ -14,6 +14,10 @@ class User(base_model.BaseModel):
         first_name (string): the user first_name
         last_name (string): the user last_name
     """
+    email = ""
+    Password = ""
+    first_name = ""
+    last_name = ""
 
     def __init__(self, *args, **kwargs):
         """Initialize the class.
@@ -22,11 +26,6 @@ class User(base_model.BaseModel):
             args (list): not used.
             kwargs (dict): used to assign attribute to the object
         """
-
-        self.email = ""
-        self.password = ""
-        self.first_name = ""
-        self.last_name = ""
 
         if kwargs is not None and len(kwargs.keys()) > 0:
             super().__init__(**kwargs)
