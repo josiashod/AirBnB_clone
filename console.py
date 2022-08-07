@@ -52,6 +52,9 @@ class HBNBCommand(cmd.Cmd):
         else:
             return super().default(line)
 
+    def emptyline(self):
+        return super().emptyline()
+
     def do_EOF(self, arg):
         """EOF signal to exit the program
         """
