@@ -90,10 +90,8 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-            return False
         elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         else:
             new_obj = eval(args[0])()
             print(new_obj.id)
@@ -110,19 +108,15 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-            return False
         elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         elif len(args) == 1:
             print(" ** instance id missing **")
-            return False
         else:
             objects = storage.all()
             key = f"{args[0]}.{args[1]}"
             if key not in objects.keys():
                 print("** no instance found **")
-                return False
             else:
                 print(objects[key])
 
@@ -138,16 +132,12 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-            return False
         elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         elif len(args) == 1:
             print(" ** instance id missing **")
-            return False
         elif f"{args[0]}.{args[1]}" not in objects:
             print("** no instance found **")
-            return False
         else:
             del objects[f"{args[0]}.{args[1]}"]
             storage.save()
@@ -164,7 +154,6 @@ class HBNBCommand(cmd.Cmd):
         objs = storage.all()
         if len(args) == 1 and args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         else:
             if len(args) == 1 and args[0] not in HBNBCommand.__classes:
                 objs = [
@@ -187,28 +176,22 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-            return False
         elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         elif len(args) == 1:
             print(" ** instance id missing **")
-            return False
         else:
             objects = storage.all()
             key = f"{args[0]}.{args[1]}"
             if key not in objects.keys():
                 print("** no instance found **")
-                return False
             else:
                 if len(args) == 2:
                     print("** attribute name missing **")
-                    return False
                 elif len(args) == 3:
                     attr_dict = eval(args[2])
                     if type(attr_dict) != dict:
                         print("** value missing **")
-                        return False
                     else:
                         for key_at in attr_dict.keys():
                             setattr(objects[key], key_at, attr_dict[key_at])
@@ -227,10 +210,8 @@ class HBNBCommand(cmd.Cmd):
         args = parse(arg)
         if len(args) == 0:
             print("** class name missing **")
-            return False
         elif args[0] not in HBNBCommand.__classes:
             print(" ** class doesn't exist **")
-            return False
         else:
             objs = storage.all()
             filter_objs = [
