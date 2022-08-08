@@ -49,7 +49,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertLess(bm1.updated_at, bm2.updated_at)
 
     def test_str_representation(self):
-        dt = datetime.now()()
+        dt = datetime.now()
         dt_repr = repr(dt)
         bm = BaseModel()
         bm.id = "123456"
@@ -65,7 +65,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertNotIn(None, bm.__dict__.values())
 
     def test_instantiation_with_kwargs(self):
-        dt = datetime.now()()
+        dt = datetime.now()
         dt_iso = dt.isoformat()
         bm = BaseModel(id="345", created_at=dt_iso, updated_at=dt_iso)
         self.assertEqual(bm.id, "345")
@@ -77,7 +77,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
             BaseModel(id=None, created_at=None, updated_at=None)
 
     def test_instantiation_with_args_and_kwargs(self):
-        dt = datetime.now()()
+        dt = datetime.now()
         dt_iso = dt.isoformat()
         bm = BaseModel("12", id="345", created_at=dt_iso, updated_at=dt_iso)
         self.assertEqual(bm.id, "345")
