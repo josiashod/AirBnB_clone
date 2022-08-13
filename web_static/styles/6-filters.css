@@ -64,7 +64,7 @@
     padding-bottom: 30px;
     opacity: 0;
     visibility: hidden;
-    transition: all .2s;
+    transition: opacity .2s;
 }
 
 .filters div>ul>li {
